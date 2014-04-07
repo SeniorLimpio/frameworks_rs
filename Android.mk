@@ -1,7 +1,9 @@
 
 LOCAL_PATH:=$(call my-dir)
 
-rs_base_CFLAGS := -Wno-error -Wall -Wno-unused-parameter -Wno-unused-variable
+rs_base_CFLAGS := -Werror -Wall -Wno-unused-parameter -Wno-unused-variable $(call-cc-cpp-option,-Qunused-arguments)
+# For gcc 4.7, C++11 narrowing is a warning...
+rs_base_CFLAGS += -Wno-error
 ifeq ($(TARGET_BUILD_PDK), true)
   rs_base_CFLAGS += -D__RS_PDK__
 endif
@@ -42,7 +44,7 @@ LOCAL_SHARED_LIBRARIES += libbcc libbcinfo libLLVM libui libgui libsync
 LOCAL_C_INCLUDES += frameworks/compile/libbcc/include
 LOCAL_C_INCLUDES += frameworks/rs/cpu_ref/linkloader/include
 
-LOCAL_CFLAGS += $(rs_base_CFLAGS)
+LOCAL_CFLAGS += $(rs_base_CFLAGS) -Qunused-arguments
 
 LOCAL_LDLIBS := -lpthread -ldl
 LOCAL_MODULE_TAGS := optional
@@ -157,7 +159,7 @@ LOCAL_SHARED_LIBRARIES += libft2 libpng libz
 LOCAL_C_INCLUDES += external/freetype/include
 LOCAL_C_INCLUDES += frameworks/compile/libbcc/include
 
-LOCAL_CFLAGS += $(rs_base_CFLAGS)
+LOCAL_CFLAGS += $(rs_base_CFLAGS) -Qunused-arguments
 
 LOCAL_LDLIBS := -lpthread -ldl
 LOCAL_MODULE_TAGS := optional
@@ -204,6 +206,7 @@ LOCAL_GENERATED_SOURCES += $(GEN)
 LOCAL_CFLAGS += $(rs_base_CFLAGS)
 LOCAL_CFLAGS += -DANDROID_RS_SERIALIZE
 LOCAL_CFLAGS += -fPIC
+LOCAL_CFLAGS += -Qunused-arguments
 
 LOCAL_SRC_FILES:= \
 	rsAdapter.cpp \
